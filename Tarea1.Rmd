@@ -1,0 +1,291 @@
+---
+title: "Tarea 1 - Estadística 2"
+author: "Juan Pablo Muralles Ramírez"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# Tarea 1
+
+# Modelo de regresión linear simple
+
+- ## **Ejercicio 4**
+
+
+
+```{r}
+porcentaje_general <- c(67, 45, 73, 54, 61)
+porcentaje_admin <- c(49, 21, 65, 47, 33)
+```
+
+```{r}
+model <- lm(porcentaje_admin ~ porcentaje_general)
+
+```
+
+### A. Gráfico de dispersión
+
+```{r}
+plot(porcentaje_general, porcentaje_admin, main="Diagrama de dispersión", xlab="% Mujeres en la empresa", ylab="% Mujeres en Administración", pch=16, col="blue")
+abline(model, col="red")
+
+
+```
+
+### B. Descripción de la gráfica
+
+los puntos siguen la línea roja pero no muy de cerca, lo que sugiere una relación lineal positiva moderada o débil. Es decir, a medida que aumenta el porcentaje de mujeres que trabajan en una empresa, hay una tendencia a que también aumente el porcentaje de mujeres en puestos directivos, pero la relación no es muy fuerte.
+
+### C. Relación de Porcentajes
+
+la relación parece ser positiva, pero no es una asociación fuerte ni perfecta, ya que existe variabilidad entre las empresas. Otros factores más allá del porcentaje de mujeres que trabajan en una empresa también pueden influir en el porcentaje de mujeres en puestos directivos.
+
+
+### D. Planteamiento del modelo
+
+$$y=\beta_0\beta_1x+\epsilon$$
+
+
+
+### E. Predicción de porcentaje de mujeres en Administración
+```{r}
+new_data <- data.frame(percent_working = 60)
+predicted_management <- predict(model, newdata = new_data)
+cat("Predicción de Porcentaje de puestos directivos para el 60% de empleadas mujeres
+:", predicted_management, "%\n")
+```
+## **Ejercicio 5**
+
+### Diagrama de Dispersión
+
+```{r}
+
+defective_parts <- c(20, 20, 30, 30, 40, 40, 50, 50)
+line_speed <- c(23, 21, 19, 16, 15, 17, 14, 11)
+
+plot(line_speed, defective_parts, main="Diagrama de Dispersión", xlab="Velocidad (pies por minuto)", ylab="Partes Defectuosas", pch=16, col="blue")
+
+abline(model, col="red")
+
+
+
+
+```
+### B. Observaciones de la gráfica
+
+El diagrama de dispersión indica la dirección y fuerza de la relación entre la velocidad de la línea y el número de piezas defectuosas. Los puntos siguen una tendencia, esto sugiere una correlación entre las dos variables.
+
+
+```{r}
+model <- lm(defective_parts ~ line_speed)
+
+
+summary(model)
+
+
+```
+### C. Ecuación de Regresión
+$$ \hat{y} = \beta_0 + \beta_1 \times x+\epsilon $$
+
+$$ \hat{y} = 83.1132 -2.8302 \times25+\epsilon $$
+### D. Predicción de cantidad de piezas defectuosas
+
+```{r}
+new_data <- data.frame(line_speed = 25)
+predicted_defective_parts <- predict(model, newdata = new_data)
+cat("Número previsto de piezas defectuosas para una velocidad de línea de 25 pies por minuto
+:", round(predicted_defective_parts), "\n")
+```
+
+## **Ejercicio 7**
+
+```{r}
+sales_data <- read.csv("~/Downloads/sales_data.csv")
+View(sales_data)
+```
+### A. Diagrama de Dispersión
+
+```{r}
+# Scatter plot
+plot(sales_data$YearsOfExperience, sales_data$AnualSales, 
+     main="Diagrama de dispersión", xlab="Años de experiencia", ylab="Ventas Anuales", pch=16, col="blue")
+
+abline(model, col="red")
+
+```
+
+### Resumen de modelo
+```{r}
+model <- lm(AnnualSales ~ YearsOfExperience, data = sales_data)
+summary(model)
+
+```
+$$ \hat{y} = \beta_0 + \beta_1 \times x+\epsilon $$
+
+$$ \hat{y} = 80.0000 -4.0000 \times x+\epsilon $$
+
+### D. Predicción de ventas anuales para personal de 9 años de experiencia
+```{r}
+new_data <- data.frame(YearsOfExperience = 9)
+predicted_sales <- predict(model, newdata = new_data)
+cat(" Predicción de ventas anuales para personal de 9 años de experiencia:", round(predicted_sales), "\n")
+
+```
+
+## **Ejercicio 18**
+### A. SST, SSR, SSE
+
+\[ SST = \sum_{i=1}^{n} (y_i - \bar{y})^2 \]
+
+
+```{r}
+price <- c(180, 150, 95, 70, 70, 35)
+score <- c(76, 71, 61, 56, 40, 26)
+
+mean_score <- mean(score)
+
+predicted_score <- 23.194 + 0.318 * price
+
+SST <- sum((score - mean_score)^2)
+SSR <- sum((predicted_score - mean_score)^2)
+SSE <- sum((score - predicted_score)^2)
+
+cat("SST:", SST, "\n")
+cat("SSR:", SSR, "\n")
+cat("SSE:", SSE, "\n")
+
+```
+Coeficiente de determinación $R^2$
+
+*indica la proporción de la variabilidad en la puntuación explicada por el modelo*
+
+```{r}
+R_squared <- SSR / SST
+
+cat("R-squared:", R_squared, "\n")
+
+```
+
+Coeficiente de correlación $r$
+*muestra la fuerza y dirección de la relación entre el precio y la puntuación global*
+
+```{r}
+correlation_coefficient <- cor(price, score)
+
+cat("Coeficiente de correlación ", correlation_coefficient, "\n")
+
+```
+*Se puede observar correlación fuerte*
+
+## **Ejercicio 19**
+
+### A. SST, SSR, SSE
+
+```{r}
+price <- c(180, 150, 95, 70, 70, 35)
+score <- c(76, 71, 61, 56, 40, 26)
+
+mean_score <- mean(score)
+
+predicted_score <- 23.194 + 0.318 * price
+
+SST <- sum((score - mean_score)^2)
+SSR <- sum((predicted_score - mean_score)^2)
+SSE <- sum((score - predicted_score)^2)
+
+cat("SST:", SST, "\n")
+cat("SSR:", SSR, "\n")
+cat("SSE:", SSE, "\n")
+
+```
+
+### B. Correlación
+```{r}
+correlation_coefficient <- cor(price, score)
+
+cat("coeficiente de correlación:", correlation_coefficient, "\n")
+
+```
+*Podemos observar correlación fuerte*
+
+## **Ejercicio 26**
+### A. Prueba T Precio, Puntuación
+
+
+### B. Prueba F Precio, Puntuación
+```{r}
+
+model <- lm(score ~ price)
+
+anova_result <- anova(model)
+
+cat("F-test p-value:", anova_result$"Pr(>F)"[1], "\n")
+
+if (anova_result$"Pr(>F)"[1] < 0.05) {
+  cat("Hay relación significante entre precio y puntuación.\n")
+} else {
+  cat("No hay relación significante entre precio y puntuación\n.\n")
+}
+
+```
+
+### C. tabla ANOVA
+
+```{r}
+cat("ANOVA Table:\n")
+print(anova(model))
+
+```
+Planteamiento de hipótesis:
+$$H_0: \text{No hay relación significativa entre Años de experiencia y ventas anuales}$$
+
+$$H_1: \text{Existe una relación significativa entre Años de experiencia y ventas anuales}$$
+
+
+*podemos conlcuir que "YearsOfExperience", es altamente significativa* Por lo tanto, se rechaza la hipótesis nula
+
+
+## **Ejercicio 43**
+
+### A.  Ecuación de regresión estimada
+
+$$\hat{y} = b_0 + b_1 \times x$$
+
+```{r}
+observacion <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+xi <- c(2, 3, 4, 5, 7, 7, 7, 8, 9)
+yi <- c(4, 5, 4, 6, 4, 6, 9, 5, 11)
+
+modelo <- lm(yi ~ xi)
+
+cat("Ecuación de regresión estimada:", 
+    paste("yi =", round(coef(modelo)[1], 2), "+", round(coef(modelo)[2], 2), "xi"), "\n")
+
+```
+
+### B. Gráfico de residuos
+```{r}
+residuos <- resid(modelo)
+
+plot(xi, residuos, main="Grafico de Residuos", xlab="xi", ylab="Residuos", pch=16, col="blue")
+
+abline(h = 0, col = "red")
+
+```
+No hay evidencia clara de desviación de la normalidad en la distribución de los residuos, ni se observan puntos atípicos evidentes que puedan afectar significativamente el ajuste del modelo.
+
+# Regresión lineal múltiple - Capitulo 15
+
+## Ejercicio 8
+
+### A. Ecuación de regresión estimada
+```{r}
+
+```
+
+### B. Añadir la variable independiente Food/Dining.
+### C. Predecir la puntuación general 
